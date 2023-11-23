@@ -17,16 +17,15 @@ public class RandomCodeGUI extends JFrame {
 
 
     //Components
-    private JTextField textField;
-    private JLabel messageLabel;
-    private JButton button;
-    private JLabel topLabel;
-    private JPanel upPanel = new JPanel(new GridLayout(1,1));
-    private JPanel midPanel = new JPanel(new GridLayout(2,2));
-    private JPanel lowPanel = new JPanel(new GridLayout(2,2));
+    //First GUI
+    private final JTextField textField;
+    private final JLabel messageLabel;
 
     JFrame randomCodeFrame = new JFrame("Random Code Generator");
 
+    String[] parties = {"Select From Here","BSP","DPS","GERB","PP","DB","SDS"};
+
+    JFrame votingFrame = new JFrame("Please Vote");
 
     //database
     Connection conn = null;
@@ -37,36 +36,45 @@ public class RandomCodeGUI extends JFrame {
 
     public RandomCodeGUI(){
 
-        //GUI settings ============================================
+        //First GUI settings ============================================
         randomCodeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         randomCodeFrame.setSize(300, 150);
         textField = new JTextField(20);
-        button = new JButton("Get Code");
+        JButton button = new JButton("Get Code");
         messageLabel = new JLabel();
         messageLabel.setHorizontalAlignment(JLabel.CENTER);
         randomCodeFrame.setLayout(new FlowLayout());
 
-        topLabel = new JLabel("Enter your EGN:");
-
-
+        JLabel topLabel = new JLabel("Enter your EGN:");
 
         //Adding the components ============================================
+        JPanel upPanel = new JPanel(new GridLayout(1, 1));
         randomCodeFrame.add(upPanel);
+        JPanel midPanel = new JPanel(new GridLayout(2, 2));
         randomCodeFrame.add(midPanel);
+        JPanel lowPanel = new JPanel(new GridLayout(2, 2));
         randomCodeFrame.add(lowPanel);
-
         upPanel.add(topLabel);
         midPanel.add(textField);
         midPanel.add(messageLabel);
         lowPanel.add(button);
 
-//        randomCodeFrame.add(textField);
-//        randomCodeFrame.add(button);
-//        randomCodeFrame.add(messageLabel);
+        //Secong GUI settings ==============================================
+        votingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        votingFrame.setSize(800,800);
+        votingFrame.setLayout(new GridLayout(2, 1));
+        JPanel midPanel2 = new JPanel(new GridLayout(2,1));
+        votingFrame.add(midPanel2);
+        JPanel bottomPanel2 = new JPanel(new GridLayout(1, 1));
+        votingFrame.add(bottomPanel2);
+        JLabel voteLabel = new JLabel("Choose Your Vote");
+        midPanel2.add(voteLabel);
+        JComboBox<String> choisesBox = new JComboBox<>(parties);
+        midPanel2.add(choisesBox);
+        JButton buttonBox = new JButton("Confirm Vote");
+        bottomPanel2.add(buttonBox);
 
-
-
-        //default porperties ============================================
+        //default porperties ===============================================
         randomCodeFrame.setVisible(true);
 
 
@@ -75,9 +83,9 @@ public class RandomCodeGUI extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                votingFrame.setVisible(true);
                 String inputText = textField.getText().trim();
-                Boolean isGenerated = false;
+                boolean isGenerated = false;
                 if (!inputText.isEmpty()) {
 
                     String generatedCode = RandomCodeGenerator.generateRandomCode();
@@ -87,10 +95,7 @@ public class RandomCodeGUI extends JFrame {
                 } else {
 
                     messageLabel.setText("Please input your EGN!");
-
                 }
-
-
             }
         });
 
