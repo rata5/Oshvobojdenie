@@ -66,7 +66,7 @@ public class RandomCodeGUI extends JFrame {
 
 
 
-        //default porperties ============================================
+        //default properties ============================================
         randomCodeFrame.setVisible(true);
 
 
@@ -83,6 +83,8 @@ public class RandomCodeGUI extends JFrame {
                     String generatedCode = RandomCodeGenerator.generateRandomCode();
                     isGenerated = true;
                     messageLabel.setText(generatedCode);
+
+                    VotingGUI votingGUI = new VotingGUI();
 
                 } else {
 

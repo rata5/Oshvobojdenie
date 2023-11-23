@@ -16,7 +16,7 @@ public class VotingGUI extends JFrame {
 
     public VotingGUI(){
         randomCodeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        randomCodeFrame.setSize(300, 150);
+        randomCodeFrame.setSize(300, 250);
 
         textField = new JTextField(20);
         button = new JButton("Get Code");
