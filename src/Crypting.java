@@ -1,8 +1,8 @@
 //public class Crypting {
-//    public static String GenerateUniqueRandomToken()
+//    public static string GenerateUniqueRandomToken()
 //    // generates a unique, random, and alphanumeric token
 //    {
-//            const String availableChars =
+//            const string availableChars =
 //            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 //        using (var generator = new RNGCryptoServiceProvider())
 //        {
