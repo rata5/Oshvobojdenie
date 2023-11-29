@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class RandomCodeGUI extends JFrame {
 
@@ -23,7 +24,7 @@ public class RandomCodeGUI extends JFrame {
 
     JFrame randomCodeFrame = new JFrame("Random Code Generator");
 
-    String[] parties = {"Select From Here","BSP","DPS","GERB","PP","DB","SDS"};
+    String[] parties = {"Select From Here", "BSP", "DPS", "GERB", "PP", "DB", "SDS"};
 
     JFrame votingFrame = new JFrame("Please Vote");
 
@@ -69,8 +70,8 @@ public class RandomCodeGUI extends JFrame {
         votingFrame.add(bottomPanel2);
         JLabel voteLabel = new JLabel("Choose Your Vote");
         midPanel2.add(voteLabel);
-        JComboBox<String> choisesBox = new JComboBox<>(parties);
-        midPanel2.add(choisesBox);
+        JComboBox<String> choicesBox = new JComboBox<>(parties);
+        midPanel2.add(choicesBox);
         JButton buttonBox = new JButton("Confirm Vote");
         bottomPanel2.add(buttonBox);
 
@@ -82,31 +83,72 @@ public class RandomCodeGUI extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                votingFrame.setVisible(true);
-                String inputText = textField.getText().trim();
-                boolean isGenerated = false;
-                if (!inputText.isEmpty()) {
+                String egn = textField.getText().trim();
+
+                if (!egn.isEmpty()) {
 
                     String generatedCode = RandomCodeGenerator.generateRandomCode();
-                    isGenerated = true;
                     messageLabel.setText(generatedCode);
-                    String sql = "INSERT INTO EGNOMER (EGN, CRYPTING) VALUES (?, ?) ";
-                    Connection conn = DBConnection.getConnection();
-                    try {
-                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                        preparedStatement.setString(1, inputText);
-                        preparedStatement.setString(2, generatedCode);
-                        preparedStatement.executeUpdate();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-
+                    checkAndInsertData(egn, generatedCode);
                 } else {
-
                     messageLabel.setText("Please input your EGN!");
                 }
             }
         });
 
+        buttonBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent t) {
+                String egn = textField.getText();
+                String sql = "UPDATE EGNOMER SET GLASOVE = ? ";
+                Connection conn = DBConnection.getConnection();
+                try {
+                    PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                    preparedStatement.setString(1, (Objects.requireNonNull(choicesBox.getSelectedItem())).toString());
+                    } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    public void insertData(String egn, String generatedCode){
+        String sql = "INSERT INTO EGNOMER (EGN, CRYPTING) VALUES (?, ?) ";
+        Connection conn = DBConnection.getConnection();
+        try{
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1,egn);
+            preparedStatement.setString(2,generatedCode);
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public boolean isRecordExists(String egn) {
+        String sql = "SELECT 1 FROM EGNOMER WHERE EGN = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, egn);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void checkAndInsertData(String egn, String code) {
+        if (!isRecordExists(egn)) {
+            insertData(egn, code);
+            votingFrame.setVisible(true);
+
+        }
+        else{
+            messageLabel.setText("You have already voted!");
+        }
     }
 }
