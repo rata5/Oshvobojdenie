@@ -34,7 +34,7 @@ public class RandomCodeGUI extends JFrame {
     User user = new User();
 
 
-    public RandomCodeGUI(){
+    public RandomCodeGUI() {
 
         //First GUI settings ============================================
         randomCodeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,9 +61,9 @@ public class RandomCodeGUI extends JFrame {
 
         //Secong GUI settings ==============================================
         votingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        votingFrame.setSize(800,800);
+        votingFrame.setSize(800, 800);
         votingFrame.setLayout(new GridLayout(2, 1));
-        JPanel midPanel2 = new JPanel(new GridLayout(2,1));
+        JPanel midPanel2 = new JPanel(new GridLayout(2, 1));
         votingFrame.add(midPanel2);
         JPanel bottomPanel2 = new JPanel(new GridLayout(1, 1));
         votingFrame.add(bottomPanel2);
@@ -78,7 +78,6 @@ public class RandomCodeGUI extends JFrame {
         randomCodeFrame.setVisible(true);
 
 
-
         //actions ============================================
         button.addActionListener(new ActionListener() {
             @Override
@@ -91,6 +90,16 @@ public class RandomCodeGUI extends JFrame {
                     String generatedCode = RandomCodeGenerator.generateRandomCode();
                     isGenerated = true;
                     messageLabel.setText(generatedCode);
+                    String sql = "INSERT INTO EGNOMER (EGN, CRYPTING) VALUES (?, ?) ";
+                    Connection conn = DBConnection.getConnection();
+                    try {
+                        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                        preparedStatement.setString(1, inputText);
+                        preparedStatement.setString(2, generatedCode);
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
 
                 } else {
 
@@ -100,21 +109,4 @@ public class RandomCodeGUI extends JFrame {
         });
 
     }
-
-    //Methods ============================================
-
-    //dobavq koda i egnto kym bazata danni
-    public void insertData(String egn, String code){
-        String sql = "INSERT INTO INFO (EGN, CODE) VALUES (?, ?) ";
-        Connection conn = DBConnection.getConnection();
-        try{
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1,egn);
-            preparedStatement.setString(2,code);
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
 }
