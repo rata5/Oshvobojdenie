@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class RandomCodeGUI extends JFrame {
 
@@ -23,7 +24,7 @@ public class RandomCodeGUI extends JFrame {
 
     JFrame randomCodeFrame = new JFrame("Random Code Generator");
 
-    String[] parties = {"Select From Here","BSP","DPS","GERB","PP","DB","SDS"};
+    String[] parties = {"Select From Here", "BSP", "DPS", "GERB", "PP", "DB", "SDS"};
 
     JFrame votingFrame = new JFrame("Please Vote");
 
@@ -34,7 +35,7 @@ public class RandomCodeGUI extends JFrame {
     User user = new User();
 
 
-    public RandomCodeGUI(){
+    public RandomCodeGUI() {
 
         //First GUI settings ============================================
         randomCodeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,16 +62,16 @@ public class RandomCodeGUI extends JFrame {
 
         //Secong GUI settings ==============================================
         votingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        votingFrame.setSize(800,800);
+        votingFrame.setSize(800, 800);
         votingFrame.setLayout(new GridLayout(2, 1));
-        JPanel midPanel2 = new JPanel(new GridLayout(2,1));
+        JPanel midPanel2 = new JPanel(new GridLayout(2, 1));
         votingFrame.add(midPanel2);
         JPanel bottomPanel2 = new JPanel(new GridLayout(1, 1));
         votingFrame.add(bottomPanel2);
         JLabel voteLabel = new JLabel("Choose Your Vote");
         midPanel2.add(voteLabel);
-        JComboBox<String> choisesBox = new JComboBox<>(parties);
-        midPanel2.add(choisesBox);
+        JComboBox<String> choicesBox = new JComboBox<>(parties);
+        midPanel2.add(choicesBox);
         JButton buttonBox = new JButton("Confirm Vote");
         bottomPanel2.add(buttonBox);
 
@@ -78,43 +79,76 @@ public class RandomCodeGUI extends JFrame {
         randomCodeFrame.setVisible(true);
 
 
-
         //actions ============================================
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                votingFrame.setVisible(true);
-                String inputText = textField.getText().trim();
-                boolean isGenerated = false;
-                if (!inputText.isEmpty()) {
+                String egn = textField.getText().trim();
+
+                if (!egn.isEmpty()) {
 
                     String generatedCode = RandomCodeGenerator.generateRandomCode();
-                    isGenerated = true;
                     messageLabel.setText(generatedCode);
-
+                    checkAndInsertData(egn, generatedCode);
                 } else {
-
                     messageLabel.setText("Please input your EGN!");
                 }
             }
         });
 
+        buttonBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent t) {
+                String egn = textField.getText();
+                String sql = "UPDATE EGNOMER SET GLASOVE = ? ";
+                Connection conn = DBConnection.getConnection();
+                try {
+                    PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                    preparedStatement.setString(1, (Objects.requireNonNull(choicesBox.getSelectedItem())).toString());
+                    } catch (SQLException exception) {
+                    exception.printStackTrace();
+                }
+
+            }
+        });
+
     }
 
-    //Methods ============================================
-
-    //dobavq koda i egnto kym bazata danni
-    public void insertData(String egn, String code){
-        String sql = "INSERT INTO INFO (EGN, CODE) VALUES (?, ?) ";
+    public void insertData(String egn, String generatedCode){
+        String sql = "INSERT INTO EGNOMER (EGN, CRYPTING) VALUES (?, ?) ";
         Connection conn = DBConnection.getConnection();
         try{
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1,egn);
-            preparedStatement.setString(2,code);
+            preparedStatement.setString(2,generatedCode);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    public boolean isRecordExists(String egn) {
+        String sql = "SELECT 1 FROM EGNOMER WHERE EGN = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, egn);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void checkAndInsertData(String egn, String code) {
+        if (!isRecordExists(egn)) {
+            insertData(egn, code);
+            votingFrame.setVisible(true);
+
+        }
+        else{
+            messageLabel.setText("You have already voted!");
+        }
+    }
 }
