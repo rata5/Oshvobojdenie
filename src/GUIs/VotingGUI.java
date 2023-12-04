@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 public class VotingGUI extends JFrame {
     JFrame frame = new JFrame();
-    JPanel upPanel = new JPanel(new GridLayout(4, 1));
-    JPanel midPanel = new JPanel(new GridLayout(2, 2));
-    JPanel lowPanel = new JPanel(new GridLayout(2, 2));
+    JPanel upPanel = new JPanel(new GridLayout(1, 1));
+    JPanel midPanel = new JPanel(new GridLayout(4, 2));
+    JPanel lowPanel = new JPanel(new GridLayout(1, 2));
 
 
     JTextField textField = new JTextField();
@@ -26,7 +26,7 @@ public class VotingGUI extends JFrame {
         //frame settings
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(500, 400);
-        frame.setLayout(new GridLayout(2,1));
+        frame.setLayout(new GridLayout(3,1));
         frame.setLocationRelativeTo(null);
 
 
@@ -49,8 +49,10 @@ public class VotingGUI extends JFrame {
         JButton submitButton = new JButton("Submit Vote");
 
 
-        upPanel.setLayout(new GridLayout(3, 1));
-        upPanel.setSize(500,300);
+        upPanel.setLayout(new GridLayout(1, 1));
+        upPanel.setSize(500,10);
+        midPanel.setLayout((new GridLayout(3, 1)));
+        midPanel.setSize(500, 300);
         lowPanel.setLayout(new FlowLayout());
 
 
@@ -60,7 +62,7 @@ public class VotingGUI extends JFrame {
 
                 JRadioButton selectedRadioButton = getSelectedRadioButton() ;
                 String vote = String.valueOf(group.getSelection());
-                String sql = "INSERT INTO CODEVOTE (VOTE) VALUES (?) ";
+                String sql = "INSERT INTO VOTES (VOTE) VALUES (?) ";
                 Connection conn = DBConnection.getConnection();
                 try{
                     PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -97,13 +99,16 @@ public class VotingGUI extends JFrame {
 
 
 
-
         //adding components to frames
 
-        //upPanel
-        upPanel.add(choice1);
-        upPanel.add(choice2);
-        upPanel.add(choice3);
+        //UpPanel
+       upPanel.add(textField);
+
+
+        //midPanel
+        midPanel.add(choice1);
+        midPanel.add(choice2);
+        midPanel.add(choice3);
 
 
         //lowPanel
@@ -114,6 +119,8 @@ public class VotingGUI extends JFrame {
 
         //adding components to frame
         frame.add(upPanel);
+
+        frame.add(midPanel);
 
         frame.add(lowPanel);
 

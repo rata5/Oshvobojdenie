@@ -8,6 +8,7 @@ import java.awt.event.*;
 
 import Logic.RandomCodeGenerator;
 
+import java.util.Base64;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -121,11 +122,14 @@ public class RandomCodeGUI extends JFrame {
     }
 
     public void insertData(String egn, String generatedCode){
-        String sql = "INSERT INTO EGNRAN (EGN, CRYPTING) VALUES (?, ?) ";
+
+        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
+
+        String sql = "INSERT INTO EGNRAN (EGN, CRYPTING) VALUES (?, ?)";
         Connection conn = DBConnection.getConnection();
         try{
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1,egn);
+            preparedStatement.setString(1,encodedEgn);
             preparedStatement.setString(2,generatedCode);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -136,10 +140,13 @@ public class RandomCodeGUI extends JFrame {
 
 
     public boolean isRecordExists(String egn) {
+
+        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
+
         String sql = "SELECT 1 FROM EGNRAN WHERE EGN = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setString(1, egn);
+            preparedStatement.setString(1, encodedEgn);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return resultSet.next();
             }
@@ -150,14 +157,16 @@ public class RandomCodeGUI extends JFrame {
     }
 
     public void checkAndInsertData(String egn, String code) {
-        if (!isRecordExists(egn)) {
-            insertData(egn, code);
 
+        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
 
-        }
-        else{
+        if (!isRecordExists(encodedEgn)) {
+            insertData(encodedEgn, code);
+
+        } else {
             messageLabel.setText("You have already voted!");
         }
     }
+
 
 }
