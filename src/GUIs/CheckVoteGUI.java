@@ -1,15 +1,9 @@
 package GUIs;
 
-import Logic.RandomCodeGenerator;
-import utility.User;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class CheckVoteGUI extends JFrame {
 
@@ -23,27 +17,27 @@ public class CheckVoteGUI extends JFrame {
         private JPanel midPanel = new JPanel(new GridLayout(2,2));
         private JPanel lowPanel = new JPanel(new GridLayout(2,2));
 
-        JFrame randomCodeFrame = new JFrame("Check Your Vote");
+        static JFrame checkVoteFrame = new JFrame("Check Your Vote");
 
 
         public CheckVoteGUI(){
 
-            randomCodeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            randomCodeFrame.setSize(300, 150);
+            checkVoteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            checkVoteFrame.setSize(300, 150);
             textField = new JTextField(20);
             button = new JButton("Check Vote");
             messageLabel = new JLabel();
             messageLabel.setHorizontalAlignment(JLabel.CENTER);
-            randomCodeFrame.setLayout(new FlowLayout());
+            checkVoteFrame.setLayout(new FlowLayout());
 
             topLabel = new JLabel("Enter your Code:");
 
 
 
             //Adding the components ============================================
-            randomCodeFrame.add(upPanel);
-            randomCodeFrame.add(midPanel);
-            randomCodeFrame.add(lowPanel);
+            checkVoteFrame.add(upPanel);
+            checkVoteFrame.add(midPanel);
+            checkVoteFrame.add(lowPanel);
 
             upPanel.add(topLabel);
             midPanel.add(textField);
@@ -52,7 +46,7 @@ public class CheckVoteGUI extends JFrame {
 
 
             //default properties ============================================
-            randomCodeFrame.setVisible(true);
+            checkVoteFrame.setVisible(true);
 
             button.addActionListener(new ActionListener() {
                 @Override
