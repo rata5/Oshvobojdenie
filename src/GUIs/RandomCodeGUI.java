@@ -22,11 +22,11 @@ public class RandomCodeGUI extends JFrame {
     //Components
     //First GUI
     private final JTextField textField;
-    private final JLabel messageLabel;
+    protected final JLabel messageLabel;
 
     JFrame randomCodeFrame = new JFrame("Random Code Generator");
 
-    //String[] parties = {"Select From Here", "BSP", "DPS", "GERB", "PP", "DB", "SDS"};
+    String[] parties = {"Select From Here", "BSP", "DPS", "GERB", "PP", "DB", "SDS"};
 
     JFrame votingFrame = new JFrame("Please Vote");
 
@@ -61,33 +61,23 @@ public class RandomCodeGUI extends JFrame {
         midPanel.add(messageLabel);
         lowPanel.add(button);
 
-//        //Secong GUI settings ==============================================
-//        votingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        votingFrame.setSize(800, 800);
-//        votingFrame.setLayout(new GridLayout(2, 1));
-//        JPanel midPanel2 = new JPanel(new GridLayout(2, 1));
-//        votingFrame.add(midPanel2);
-//        JPanel bottomPanel2 = new JPanel(new GridLayout(1, 1));
-//        votingFrame.add(bottomPanel2);
-//        JLabel voteLabel = new JLabel("Choose Your Vote");
-//        midPanel2.add(voteLabel);
-//        JComboBox<String> choicesBox = new JComboBox<>(parties);
-//        midPanel2.add(choicesBox);
-//        JButton buttonBox = new JButton("Confirm Vote");
-//        bottomPanel2.add(buttonBox);
 
+        //default properties ===============================================
 
-
-        //default porperties ===============================================
         randomCodeFrame.setVisible(true);
-
+        randomCodeFrame.setLocationRelativeTo(null);    //Center the Frame
 
 
         //actions ============================================
         button.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed (ActionEvent e){
+
+                CodeCheckGUI codeCheck = new CodeCheckGUI();
+//                VotingGUI votingPage = new VotingGUI();
                 String egn = textField.getText().trim();
+
+                ;
 
                 if (!egn.isEmpty()) {
 
@@ -95,11 +85,10 @@ public class RandomCodeGUI extends JFrame {
                     messageLabel.setText(generatedCode);
                     checkAndInsertData(egn, generatedCode);
                 } else {
-
                     messageLabel.setText("Please input your EGN!");
                 }
             }
-        });
+
 
 //        buttonBox.addActionListener(new ActionListener() {
 //            @Override
@@ -119,54 +108,62 @@ public class RandomCodeGUI extends JFrame {
 //            }
 //        });
 
-    }
 
-    public void insertData(String egn, String generatedCode){
+            public void insertData (String egn, String generatedCode){
 
-        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
+                String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
 
-        String sql = "INSERT INTO EGNRAN (EGN, CRYPTING) VALUES (?, ?)";
-        Connection conn = DBConnection.getConnection();
-        try{
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1,encodedEgn);
-            preparedStatement.setString(2,generatedCode);
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-
-
-    public boolean isRecordExists(String egn) {
-
-        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
-
-        String sql = "SELECT 1 FROM EGNRAN WHERE EGN = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setString(1, encodedEgn);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next();
+                String sql = "INSERT INTO EGNRAN (EGN, CRYPTING) VALUES (?, ?)";
+                Connection conn = DBConnection.getConnection();
+                try {
+                    PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                    preparedStatement.setString(1, encodedEgn);
+                    preparedStatement.setString(2, generatedCode);
+                    preparedStatement.executeUpdate();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+
+
+            public boolean isRecordExists (String egn){
+
+                String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
+
+                String sql = "SELECT 1 FROM EGNRAN WHERE EGN = ?";
+                try (Connection conn = DBConnection.getConnection();
+                     PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+                    preparedStatement.setString(1, encodedEgn);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        return resultSet.next();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            public void checkAndInsertData (String egn, String code){
+
+                String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
+
+                if (!isRecordExists(encodedEgn)) {
+                    insertData(encodedEgn, code);
+
+                } else {
+                    messageLabel.setText("You have already voted!");
+                }
+            }
+
+        });
     }
-
-    public void checkAndInsertData(String egn, String code) {
-
-        String encodedEgn = Base64.getEncoder().encodeToString(egn.getBytes());
-
-        if (!isRecordExists(encodedEgn)) {
-            insertData(encodedEgn, code);
-
-        } else {
-            messageLabel.setText("You have already voted!");
-        }
-    }
-
-
 }
+
+
+
+
+
+
+
+
+
