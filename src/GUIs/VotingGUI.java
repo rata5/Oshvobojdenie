@@ -88,7 +88,6 @@ public class VotingGUI extends JFrame {
                 JRadioButton selectedRadioButton = getSelectedRadioButton(group);
                 saveVoteToDB(selectedRadioButton, votingCode);
 
-                String vote1 = selectedRadioButton.getText().trim();
             }
         });
 
@@ -130,17 +129,45 @@ public class VotingGUI extends JFrame {
 
     private void saveVoteToDB(JRadioButton selectedRadioButton, String votingCode) {
 
+        if (!isCodeValidInDatabase(votingCode)) {
+            System.out.println("Invalid voting code. Please enter a valid code.");
+            return;
+        }
+
+
         String vote = selectedRadioButton.getText().trim();
         String sql = "INSERT INTO VOTES (VOTE, CRYPTING) VALUES (?, ?)";
         Connection conn = DBConnection.getConnection();
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, votingCode);
-            preparedStatement.setString(2, vote);
+            preparedStatement.setString(1, vote);
+            preparedStatement.setString(2, votingCode);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    private boolean isCodeValidInDatabase(String votingCode) {
+        String query = "SELECT * FROM EGNRAN WHERE CRYPTING = ?";
+        Connection conn = DBConnection.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, votingCode);
+            return preparedStatement.executeQuery().next();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
