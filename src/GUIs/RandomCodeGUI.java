@@ -26,8 +26,6 @@ public class RandomCodeGUI extends JFrame {
 
     JFrame randomCodeFrame = new JFrame("Random Code Generator");
 
-    String[] parties = {"Select From Here", "BSP", "DPS", "GERB", "PP", "DB", "SDS"};
-
     JFrame votingFrame = new JFrame("Please Vote");
 
     //database
@@ -73,8 +71,6 @@ public class RandomCodeGUI extends JFrame {
             @Override
             public void actionPerformed (ActionEvent e){
 
-                CodeCheckGUI codeCheck = new CodeCheckGUI();
-//                VotingGUI votingPage = new VotingGUI();
                 String egn = textField.getText().trim();
 
                 ;
@@ -90,23 +86,7 @@ public class RandomCodeGUI extends JFrame {
             }
 
 
-//        buttonBox.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String sql = "INSERT INTO VOTESTABLE (VOTE) VALUES (?)";
-//                Connection conn = DBConnection.getConnection();
-//                try {
-//                    PreparedStatement preparedStatement = conn.prepareStatement(sql);
-//                    preparedStatement.setString(1, (Objects.requireNonNull(choicesBox.getSelectedItem())).toString());
-//                    preparedStatement.executeUpdate();
-//                } catch (SQLException exception) {
-//                    exception.printStackTrace();
-//
-//                }
-//
-//
-//            }
-//        });
+
 
 
             public void insertData (String egn, String generatedCode){

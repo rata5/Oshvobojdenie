@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Enumeration;
+
 import utility.DBConnection;
 
 public class VotingGUI extends JFrame {
@@ -23,6 +25,18 @@ public class VotingGUI extends JFrame {
     JButton button = new JButton();
 
 
+    protected JRadioButton getSelectedRadioButton(ButtonGroup group) {
+        Enumeration<AbstractButton> buttons = group.getElements();
+        while (buttons.hasMoreElements()) {
+            JRadioButton button = (JRadioButton) buttons.nextElement();
+            if (button.isSelected()) {
+                return button;
+            }
+        }
+        return null;
+    }
+
+
     public VotingGUI() {
 
         //frame settings=================================================
@@ -34,7 +48,6 @@ public class VotingGUI extends JFrame {
 
 
         //Frame elements==================================================
-        JTextField votingCode  = new JTextField(20);
         JButton submitButton = new JButton("Submit Vote");
         label.setHorizontalAlignment(JLabel.CENTER);
             //Choices settings
@@ -62,8 +75,7 @@ public class VotingGUI extends JFrame {
         //Button Methods =============================================================
 
 
-        //Checks the code form textfield with the generated code
-        //TODO
+
 
 
             //Adds vote into table
@@ -71,67 +83,13 @@ public class VotingGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                JRadioButton selectedRadioButton = getSelectedRadioButton() ;
-                String vote = String.valueOf(group.getSelection());
-                String sql = "INSERT INTO CODEVOTE (VOTE) VALUES (?) ";
-                Connection conn = DBConnection.getConnection();
-                try{
-                    PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                    preparedStatement.setString(2,vote);
-                    preparedStatement.executeUpdate();
-                    } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                String votingCode = textField.getText();
+
+                JRadioButton selectedRadioButton = getSelectedRadioButton(group);
+                saveVoteToDB(selectedRadioButton, votingCode);
+
+                String vote1 = selectedRadioButton.getText().trim();
             }
-
-            //stores the selection from the radio buttons
-            protected JRadioButton getSelectedRadioButton(){
-                if(choice1.isSelected()){
-                    return choice1;
-                }
-                else if(choice2.isSelected()){
-                    return choice2;
-                }
-                else if (choice3.isSelected()){
-                    return choice3;
-                }
-                else return null;
-            }
-//
-//            private String getCode(String code) {
-//
-//                Connection conn = DBConnection.getConnection();
-//
-//                String sql = "SELECT 1 FROM INFO WHERE CODE = ?";
-//
-//            }
-
-
-
-            //updates the DB
-            //TODO
-           private void updateDatabase(String code, String vote){
-                String update  = "UPDATE CODEVOTE SET VOTE = ? WHERE CODE = ?";
-
-               Connection conn = DBConnection.getConnection();
-               try{
-                   PreparedStatement preparedStatement = conn.prepareStatement(update);
-                   preparedStatement.setString(1,code);
-                   preparedStatement.setString(2,vote);
-                  int rowsAffected =  preparedStatement.executeUpdate();
-
-                  if(rowsAffected > 0){
-                      System.out.println("Your vote is saved");
-                  }
-                  else{
-                      System.out.println("Failed to save vote");
-                  }
-               } catch (SQLException throwables) {
-                   throwables.printStackTrace();
-               }
-           }
-
-
         });
 
 
@@ -145,7 +103,7 @@ public class VotingGUI extends JFrame {
 
         //upPanel
         upPanel.add(label);
-        upPanel.add(votingCode);
+        upPanel.add(textField);
 
 
 
@@ -168,6 +126,22 @@ public class VotingGUI extends JFrame {
 
 
         frame.setVisible(true);
+    }
+
+    private void saveVoteToDB(JRadioButton selectedRadioButton, String votingCode) {
+
+        String vote = selectedRadioButton.getText().trim();
+        String sql = "INSERT INTO VOTES (VOTE, CRYPTING) VALUES (?, ?)";
+        Connection conn = DBConnection.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, votingCode);
+            preparedStatement.setString(2, vote);
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 
