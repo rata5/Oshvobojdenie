@@ -134,6 +134,11 @@ public class VotingGUI extends JFrame {
             return;
         }
 
+        if (isCodeAlreadyVoted(votingCode)) {
+            System.out.println("You have already voted with this code.");
+            return;
+        }
+
 
         String vote = selectedRadioButton.getText().trim();
         String sql = "INSERT INTO VOTES (VOTE, CRYPTING) VALUES (?, ?)";
@@ -170,6 +175,30 @@ public class VotingGUI extends JFrame {
             }
         }
     }
+
+    // Helper method to check if the code is present in the VOTES table
+    private boolean isCodeAlreadyVoted(String votingCode) {
+        String query = "SELECT * FROM VOTES WHERE CRYPTING = ?";
+        Connection conn = DBConnection.getConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, votingCode);
+            return preparedStatement.executeQuery().next();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 }
