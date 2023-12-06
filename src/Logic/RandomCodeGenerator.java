@@ -5,9 +5,13 @@ import java.security.SecureRandom;
 //Защо това е цял нов клас само един Господ знае
 
 public class RandomCodeGenerator {
+
     //simvoli koito shte se izpolzvat za generiraneto na koda
+
     private static final String SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
     //dyljina na koda
+
     private static final int CODE_LENGTH = 10;
 
     public static String generateRandomCode(){
