@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
 //        RandomCodeGUI randomCodeGUI = new RandomCodeGUI();
-//        VotingGUI vote = new VotingGUI();
-        VoteCheckGUI voteCheck = new VoteCheckGUI();
+        VotingGUI vote = new VotingGUI();
+//        VoteCheckGUI voteCheck = new VoteCheckGUI();
     }
 }

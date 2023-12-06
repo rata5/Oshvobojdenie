@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
+import javafx.scene.layout.FlowPane;
 import utility.DBConnection;
 
 public class VotingGUI extends JFrame {
@@ -19,6 +20,7 @@ public class VotingGUI extends JFrame {
     JPanel lowPanel = new JPanel(new GridLayout(2, 2));
 
     JLabel label = new JLabel("Enter code before voting");
+    JLabel codeLabel = new JLabel();
 
 
     JTextField textField = new JTextField();
@@ -113,7 +115,9 @@ public class VotingGUI extends JFrame {
 
 
         //lowPanel
+        lowPanel.setLayout(new FlowLayout());
         lowPanel.add(submitButton);
+        lowPanel.add(codeLabel);
 
 
 
@@ -130,12 +134,12 @@ public class VotingGUI extends JFrame {
     private void saveVoteToDB(JRadioButton selectedRadioButton, String votingCode) {
 
         if (!isCodeValidInDatabase(votingCode)) {
-            System.out.println("Invalid voting code. Please enter a valid code.");
+            codeLabel.setText("Invalid Code, please try again");
             return;
         }
 
         if (isCodeAlreadyVoted(votingCode)) {
-            System.out.println("You have already voted with this code.");
+            codeLabel.setText("You have already voted with this code.");
             return;
         }
 
