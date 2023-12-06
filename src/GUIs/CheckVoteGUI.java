@@ -2,21 +2,12 @@ package GUIs;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class CheckVoteGUI extends JFrame {
 
-
-        //Components
-        private JTextField textField;
-        private JLabel messageLabel;
-        private JButton button;
-        private JLabel topLabel;
-        private JPanel upPanel = new JPanel(new GridLayout(1,1));
-        private JPanel midPanel = new JPanel(new GridLayout(2,2));
-        private JPanel lowPanel = new JPanel(new GridLayout(2,2));
-
+    //Components
+    private final JTextField textField;
+        private final JLabel messageLabel;
         static JFrame checkVoteFrame = new JFrame("Check Your Vote");
 
 
@@ -25,18 +16,21 @@ public class CheckVoteGUI extends JFrame {
             checkVoteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             checkVoteFrame.setSize(300, 150);
             textField = new JTextField(20);
-            button = new JButton("Check Vote");
+            JButton button = new JButton("Check Vote");
             messageLabel = new JLabel();
             messageLabel.setHorizontalAlignment(JLabel.CENTER);
             checkVoteFrame.setLayout(new FlowLayout());
 
-            topLabel = new JLabel("Enter your Code:");
+            JLabel topLabel = new JLabel("Enter your Code:");
 
 
 
             //Adding the components ============================================
+            JPanel upPanel = new JPanel(new GridLayout(1, 1));
             checkVoteFrame.add(upPanel);
+            JPanel midPanel = new JPanel(new GridLayout(2, 2));
             checkVoteFrame.add(midPanel);
+            JPanel lowPanel = new JPanel(new GridLayout(2, 2));
             checkVoteFrame.add(lowPanel);
 
             upPanel.add(topLabel);
@@ -48,26 +42,22 @@ public class CheckVoteGUI extends JFrame {
             //default properties ============================================
             checkVoteFrame.setVisible(true);
 
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+            button.addActionListener(e -> {
 
-                    String inputText = textField.getText().trim();
+                String inputText = textField.getText().trim();
 
-                    if (!inputText.isEmpty()) {
+                if (!inputText.isEmpty()) {
 
-                        messageLabel.setText("userVote");
+                    messageLabel.setText("userVote");
 
 
-                    } else {
+                } else {
 
-                        messageLabel.setText("Please input your Generated Code!");
-
-                    }
-
+                    messageLabel.setText("Please input your Generated Code!");
 
                 }
+
+
             });
         }
     }
-

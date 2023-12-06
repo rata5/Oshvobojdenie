@@ -1,20 +1,17 @@
 package GUIs;
 
+import Logic.RandomCodeGenerator;
 import utility.DBConnection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-import Logic.RandomCodeGenerator;
-
-import java.util.Base64;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
-import GUIs.CheckVoteGUI;
+import java.util.Base64;
 
 public class RandomCodeGUI extends JFrame {
 
@@ -73,7 +70,7 @@ public class RandomCodeGUI extends JFrame {
 
                 String egn = textField.getText().trim();
 
-                ;
+
 
                 if (!egn.isEmpty()) {
 
@@ -138,12 +135,3 @@ public class RandomCodeGUI extends JFrame {
         });
     }
 }
-
-
-
-
-
-
-
-
-

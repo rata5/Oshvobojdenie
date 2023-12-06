@@ -1,16 +1,14 @@
 package GUIs;
 
 
+import utility.DBConnection;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Enumeration;
-
-import utility.DBConnection;
 
 public class VotingGUI extends JFrame {
     JFrame frame = new JFrame();
@@ -22,7 +20,6 @@ public class VotingGUI extends JFrame {
 
 
     JTextField textField = new JTextField();
-    JButton button = new JButton();
 
 
     protected JRadioButton getSelectedRadioButton(ButtonGroup group) {
@@ -79,16 +76,13 @@ public class VotingGUI extends JFrame {
 
 
             //Adds vote into table
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        submitButton.addActionListener(e -> {
 
-                String votingCode = textField.getText();
+            String votingCode = textField.getText();
 
-                JRadioButton selectedRadioButton = getSelectedRadioButton(group);
-                saveVoteToDB(selectedRadioButton, votingCode);
+            JRadioButton selectedRadioButton = getSelectedRadioButton(group);
+            saveVoteToDB(selectedRadioButton, votingCode);
 
-            }
         });
 
 
