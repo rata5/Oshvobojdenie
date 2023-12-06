@@ -84,7 +84,7 @@ public class VotingGUI extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                CheckVoteGUI checkVote = new CheckVoteGUI();
                 String votingCode = textField.getText();
 
                 JRadioButton selectedRadioButton = getSelectedRadioButton(group);
@@ -202,7 +202,4 @@ public class VotingGUI extends JFrame {
             }
         }
     }
-
-
-
 }
