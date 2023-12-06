@@ -40,6 +40,7 @@ public class RandomCodeGUI extends JFrame {
         messageLabel = new JLabel();
         messageLabel.setHorizontalAlignment(JLabel.CENTER);
         randomCodeFrame.setLayout(new FlowLayout());
+
         JLabel topLabel = new JLabel("Enter your EGN:");
 
         //Adding the components ============================================
