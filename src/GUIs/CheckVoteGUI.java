@@ -70,5 +70,7 @@ public class CheckVoteGUI extends JFrame {
             throwables.printStackTrace();
         }
         return null;
+
+        //Comment
     }
 }
