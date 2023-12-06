@@ -114,6 +114,10 @@ public class VotingGUI extends JFrame {
             codeLabel.setText("You have already voted with this code.");
             return;
         }
+
+        else{
+            codeLabel.setText("Vote Saved Successfully!");
+        }
         String vote = selectedRadioButton.getText().trim();
         String sql = "INSERT INTO VOTES (VOTE, CRYPTING) VALUES (?, ?)";
         Connection conn = DBConnection.getConnection();
