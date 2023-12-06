@@ -2,6 +2,11 @@ package GUIs;
 
 import javax.swing.*;
 import java.awt.*;
+import utility.DBConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CheckVoteGUI extends JFrame {
 
@@ -47,9 +52,12 @@ public class CheckVoteGUI extends JFrame {
                 String inputText = textField.getText().trim();
 
                 if (!inputText.isEmpty()) {
-
-                    messageLabel.setText("userVote");
-
+                    String vote = getVoteByCode(inputText);
+                    if (vote != null) {
+                        messageLabel.setText("Your vote: " + vote);
+                    } else {
+                        messageLabel.setText("No vote found for the entered code.");
+                    }
 
                 } else {
 
@@ -59,5 +67,24 @@ public class CheckVoteGUI extends JFrame {
 
 
             });
+
         }
+
+    private String getVoteByCode(String votingCode) {
+        String query = "SELECT VOTE FROM VOTES WHERE CRYPTING = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+
+            preparedStatement.setString(1, votingCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("VOTE");
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
     }

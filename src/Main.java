@@ -1,5 +1,5 @@
-import GUIs.RandomCodeGUI;
-import GUIs.VoteCheckGUI;
+import GUIs.CheckVoteGUI;
+import GUIs.RandomCodeGUI;;
 import GUIs.VotingGUI;
 
 import java.sql.SQLException;
@@ -7,10 +7,10 @@ import java.sql.SQLException;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
-//        RandomCodeGUI randomCodeGUI = new RandomCodeGUI();
+        RandomCodeGUI randomCodeGUI = new RandomCodeGUI();
         VotingGUI vote = new VotingGUI();
-//        VoteCheckGUI voteCheck = new VoteCheckGUI();
+        CheckVoteGUI checkVote = new CheckVoteGUI();
     }
 }
