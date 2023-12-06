@@ -1,6 +1,9 @@
 package GUIs;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,13 +65,14 @@ public class VotingGUI extends JFrame {
         midPanel.setSize(500, 300);
         lowPanel.setLayout(new FlowLayout());
 
+
         //Button Methods =============================================================
         //Adds vote into table
 
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CheckVoteGUI checkVote = new CheckVoteGUI();
+//                VoteCheckGUI checkVote = new VoteCheckGUI();
                 String votingCode = textField.getText();
                 JRadioButton selectedRadioButton = getSelectedRadioButton(group);
                 saveVoteToDB(selectedRadioButton, votingCode);

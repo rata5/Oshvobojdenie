@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CheckVoteGUI extends JFrame {
+public class VoteCheckGUI extends JFrame {
 
     //Components
 
@@ -16,7 +16,7 @@ public class CheckVoteGUI extends JFrame {
     private final JLabel messageLabel;
     static JFrame checkVoteFrame = new JFrame("Check Your Vote");
 
-    public CheckVoteGUI() {
+    public VoteCheckGUI() {
         checkVoteFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         checkVoteFrame.setSize(300, 150);
         textField = new JTextField(20);
